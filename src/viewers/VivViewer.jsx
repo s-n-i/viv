@@ -297,6 +297,7 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
+    console.log(deckProps?.layers,'deckProps?.layers')
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading

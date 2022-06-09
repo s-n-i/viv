@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import shallow from 'zustand/shallow';
-import React from 'react';
+import React, { useState } from 'react';
 import debounce from 'lodash/debounce';
 import {
   SideBySideViewer,
@@ -18,8 +18,14 @@ import {
 } from '../state';
 import { useWindowSize } from '../utils';
 import { DEFAULT_OVERVIEW } from '../constants';
+import {layerData} from './Layers/data'
+import {GridCellLayer} from 'deck.gl';
+import {generateText} from './Layers/generateText'
+import {generateIcons} from './Layers/generateIcons'
+import { useEffect } from 'react';
 
 const Viewer = () => {
+  console.log('generateText',generateText)
   const [useLinkedView, use3d, viewState] = useViewerStore(
     store => [store.useLinkedView, store.use3d, store.viewState],
     shallow
@@ -73,9 +79,71 @@ const Viewer = () => {
     shallow
   );
 
-  const onViewStateChange = ({ viewState: { zoom } }) => {
+  const [hoverInfo, setHoverInfo]=useState();
+  const [heatmapLayer, setHeatmapLayer]=useState();
+  const [layers, setLayers] = useState([]);
+  const cellSize = 4140;
+  const offsetPosition = (
+    unparsedPosition,
+    cellSize,
+    xOffset,
+    yOffset
+  ) => {
+    const position = unparsedPosition.split(',');
+    return [parseInt(position[1]) * cellSize + xOffset, (position[0].charCodeAt(0) - 65) * cellSize + yOffset];
+  }
+  const layerControls = {
+          "visible": true,
+          "subLayers": [
+              {
+                  "visible": true
+              },
+              {
+                  "visible": true
+              }
+          ]
+      };
+  const generateHeatmap = (data, cellSize, setHoverInfo) => {
+    return new GridCellLayer({
+      id: 'grid-cell-layer-#detail#',
+      data,
+      pickable: true,
+      autoHighlight: true,
+      highlightColor: [0, 0, 255, 200],
+      extruded: false,
+      cellSize,
+      getPosition: (d) => offsetPosition(d.position, cellSize, -cellSize, 0),
+      getFillColor: (d) => {
+        const concentration = parseInt(d.concentration);
+        return [concentration > 255 ? 255 : concentration, 0, 0, 100];
+      }
+    });
+  };
+
+  useEffect(()=>{
+    setHeatmapLayer(generateHeatmap(layerData.data, cellSize, setHoverInfo))
+  },[])
+
+  const zoomTextVisibilities={
+    well_location: -7,
+    drug_name: -4,
+    time_point: -4,
+    concentration: -4
+  }
+  const onViewStateChange = (vws) => {
+    console.log(vws,'vws')
+    const { viewState }=vws;
+    const { zoom }=viewState;
     const z = Math.min(Math.max(Math.round(-zoom), 0), loader.length - 1);
     useViewerStore.setState({ pyramidResolution: z });
+    if ((vws.viewState.zoom>-7 && vws.oldViewState.zoom<-7) || (vws.viewState.zoom<-7 && vws.oldViewState.zoom>-7) || (vws.viewState.zoom>-4 && vws.oldViewState.zoom<-4) || (vws.viewState.zoom<-4 && vws.oldViewState.zoom>-4)) {
+    setLayers([
+      generateIcons(layerData.data, cellSize, layerControls.visible && layerControls.subLayers[1].visible && viewState.zoom>zoomTextVisibilities.drug_name, layerData.images.fields[0]),
+      ...layerData.text.fields.map((entry)=>generateText(layerData.data, cellSize, layerControls.visible && layerControls.subLayers[0].visible && viewState.zoom>zoomTextVisibilities[entry.field], entry))
+    ]
+    );
+  }
+
   };
 
   return use3d ? (
@@ -149,6 +217,18 @@ const Viewer = () => {
       ]}
       colormap={colormap || 'viridis'}
       onViewStateChange={onViewStateChange}
+      deckProps={{
+        layers:[heatmapLayer, ...layers],
+        getTooltip: ({object}) => object && {
+          html: `<img crossOrigin="anonymous"
+          referrerPolicy="origin"
+          src="${object.drugUrl}">`,
+          style: {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            fontSize: '0.8em'
+          }
+        }
+      }}
     />
   );
 };
