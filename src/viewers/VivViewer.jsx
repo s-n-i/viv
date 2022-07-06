@@ -76,22 +76,24 @@ class VivViewerWrapper extends PureComponent {
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1];
-      const layers=[];
-      const width=9;
-      const height=9;
-      /*
-      for (let i=0;i<width;i++){
-        for (let j=0;j<width;j++) {
-          const modelMatrix = new Matrix4(IDENTITY).translate([150000*i, 150000*j, 0]);
-          layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+i+"-"+j+"-#detail#", modelMatrix}))
-        }
-      }*/
-      const modelMatrix = new Matrix4(IDENTITY).translate([50000, 0, 0]);
-      layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+1+"-"+1+"-#detail#", modelMatrix}))
-    this.state.layers=layers;
-    createLoader("https://files.ci.aws.labshare.org/pyramids/rat_brain").then(loader=>{
-      console.log(loader,'loader')
-      this.setState({layers:[...layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+0+"-"+0+"-#detail#"})]})
+    this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"})];
+
+    const data=[
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain'
+    ];
+    
+    data.forEach((url, i)=>{
+      createLoader(url).then(loader=>{
+        console.log(loader,'loader')
+        const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i+1), 0, 0]);
+        this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
+      })
     })
   }
 
