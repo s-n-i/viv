@@ -3,6 +3,7 @@ import DeckGL from '@deck.gl/react';
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
+import { Matrix4 } from 'math.gl';
 
 const areViewStatesEqual = (viewState, otherViewState) => {
   return (
@@ -297,6 +298,20 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
+    const IDENTITY = [1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1];
+      const modelMatrix = new Matrix4(IDENTITY).translate([100000, 0, 0]);
+      const layers=[];
+      const width=9;
+      const height=9;
+      for (let i=0;i<width;i++){
+        for (let j=0;j<width;j++) {
+          const modelMatrix = new Matrix4(IDENTITY).translate([150000*i, 150000*j, 0]);
+          layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+i+"-"+j+"-#detail#", modelMatrix}))
+        }
+      }
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -304,8 +319,8 @@ class VivViewerWrapper extends PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...this._renderLayers()]
-            : [...this._renderLayers(), ...deckProps.layers]
+            ? [...layers]
+            : [...layers, ...deckProps.layers]
         }
         onViewStateChange={this._onViewStateChange}
         views={deckGLViews}
