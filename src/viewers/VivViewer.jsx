@@ -72,6 +72,21 @@ class VivViewerWrapper extends PureComponent {
     this._onViewStateChange = this._onViewStateChange.bind(this);
     this.layerFilter = this.layerFilter.bind(this);
     this.onHover = this.onHover.bind(this);
+    const IDENTITY = [1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1];
+      const modelMatrix = new Matrix4(IDENTITY).translate([100000, 0, 0]);
+      const layers=[];
+      const width=9;
+      const height=9;
+      for (let i=0;i<width;i++){
+        for (let j=0;j<width;j++) {
+          const modelMatrix = new Matrix4(IDENTITY).translate([150000*i, 150000*j, 0]);
+          layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+i+"-"+j+"-#detail#", modelMatrix}))
+        }
+      }
+    this.state.layers=layers;
   }
 
   /**
@@ -121,6 +136,7 @@ class VivViewerWrapper extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate')
     const { props } = this;
     const { views } = props;
     // Only update state if the previous viewState prop does not match the current one
@@ -164,6 +180,7 @@ class VivViewerWrapper extends PureComponent {
    * using the previous state (falling back on the view's initial state) for target x and y, zoom level etc.
    */
   static getDerivedStateFromProps(props, prevState) {
+    console.log('getDerivedStateFromProps')
     const { views, viewStates: viewStatesProps } = props;
     // Update internal viewState on view changes as well as height and width changes.
     // Maybe we should add x/y too?
@@ -262,6 +279,7 @@ class VivViewerWrapper extends PureComponent {
    * This renders the layers in the DeckGL context.
    */
   _renderLayers() {
+    console.log('_renderLayers')
     const { onHover } = this;
     const { viewStates } = this.state;
     const { views, layerProps } = this.props;
@@ -277,6 +295,7 @@ class VivViewerWrapper extends PureComponent {
   }
 
   render() {
+    console.log('render()')
     /* eslint-disable react/destructuring-assignment */
     const { views, randomize, useDevicePixels = true, deckProps } = this.props;
     const { viewStates } = this.state;
@@ -298,20 +317,7 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
-    const IDENTITY = [1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1];
-      const modelMatrix = new Matrix4(IDENTITY).translate([100000, 0, 0]);
-      const layers=[];
-      const width=9;
-      const height=9;
-      for (let i=0;i<width;i++){
-        for (let j=0;j<width;j++) {
-          const modelMatrix = new Matrix4(IDENTITY).translate([150000*i, 150000*j, 0]);
-          layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+i+"-"+j+"-#detail#", modelMatrix}))
-        }
-      }
+    
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -319,8 +325,8 @@ class VivViewerWrapper extends PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...layers]
-            : [...layers, ...deckProps.layers]
+            ? [...this.state.layers]
+            : [...this.state.layers, ...deckProps.layers]
         }
         onViewStateChange={this._onViewStateChange}
         views={deckGLViews}
