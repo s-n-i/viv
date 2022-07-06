@@ -4,7 +4,7 @@ import DeckGL from '@deck.gl/react';
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
 import { Matrix4 } from 'math.gl';
-
+import { createLoader } from '../avivator/src/utils';
 const areViewStatesEqual = (viewState, otherViewState) => {
   return (
     otherViewState === viewState ||
@@ -76,17 +76,23 @@ class VivViewerWrapper extends PureComponent {
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1];
-      const modelMatrix = new Matrix4(IDENTITY).translate([100000, 0, 0]);
       const layers=[];
       const width=9;
       const height=9;
+      /*
       for (let i=0;i<width;i++){
         for (let j=0;j<width;j++) {
           const modelMatrix = new Matrix4(IDENTITY).translate([150000*i, 150000*j, 0]);
           layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+i+"-"+j+"-#detail#", modelMatrix}))
         }
-      }
+      }*/
+      const modelMatrix = new Matrix4(IDENTITY).translate([50000, 0, 0]);
+      layers.push(this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+1+"-"+1+"-#detail#", modelMatrix}))
     this.state.layers=layers;
+    createLoader("https://files.ci.aws.labshare.org/pyramids/rat_brain").then(loader=>{
+      console.log(loader,'loader')
+      this.setState({layers:[...layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+0+"-"+0+"-#detail#"})]})
+    })
   }
 
   /**
@@ -278,16 +284,18 @@ class VivViewerWrapper extends PureComponent {
   /**
    * This renders the layers in the DeckGL context.
    */
-  _renderLayers() {
+  _renderLayers(loader) {
     console.log('_renderLayers')
     const { onHover } = this;
     const { viewStates } = this.state;
     const { views, layerProps } = this.props;
+    console.log('layerProps',layerProps)
     return views.map((view, i) =>
       view.getLayers({
         viewStates,
         props: {
-          ...layerProps[i]
+          ...layerProps[i],
+          ...(loader ? {loader} : {})
           //onHover
         }
       })
