@@ -287,8 +287,8 @@ class VivViewerWrapper extends PureComponent {
       view.getLayers({
         viewStates,
         props: {
-          ...layerProps[i],
-          onHover
+          ...layerProps[i]
+          //onHover
         }
       })
     );
