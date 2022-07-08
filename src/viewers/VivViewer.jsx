@@ -85,13 +85,60 @@ class VivViewerWrapper extends PureComponent {
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain'
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate'
     ];
-    
+    const row =20;
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
         console.log(loader,'loader')
-        const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i+1), 0, 0]);
+        const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i%row+1), 80000*Math.floor(i/row), 0]);
         this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
       })
     })
@@ -327,7 +374,7 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
-    
+    console.log(this.state.layers,'this.state.layers')
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
