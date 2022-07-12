@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'; // eslint-disable-line import/no-unresolved
 import DeckGL from '@deck.gl/react';
+import {GridCellLayer} from 'deck.gl';
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
@@ -76,7 +77,7 @@ class VivViewerWrapper extends PureComponent {
       0, 1, 0, 0,
       0, 0, 1, 0,
       0, 0, 0, 1];
-    this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"})];
+   
 
     const data=[
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
@@ -135,6 +136,27 @@ class VivViewerWrapper extends PureComponent {
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate'
     ];
     const row =20;
+    const generateHeatmap = () => {
+      console.log('generateHeatmap');
+      const cellSize = 4140;
+      const width = 24;
+      const height = 16;
+      const data1 = Array.from({length: width * height}, (e, i) => ({
+        fillColor: [Math.floor(Math.random() * 256), 0, 0, 100],
+        position: [(i % width) * cellSize, Math.floor(i / width) * cellSize]
+      }));
+      console.log('data1', data1);
+      return new GridCellLayer({
+        id: 'grid-cell-layer-#detail#',
+        data: data1,
+        extruded: false,
+        cellSize,
+        getPosition: (d) => d.position,
+        getFillColor: (d) => d.fillColor
+      });
+    };
+    this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"}), generateHeatmap()];
+    
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
         console.log(loader,'loader')
