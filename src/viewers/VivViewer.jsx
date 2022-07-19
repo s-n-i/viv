@@ -89,7 +89,6 @@ class VivViewerWrapper extends PureComponent {
     ];
     const row =20;
     const generateHeatmap = () => {
-      console.log('generateHeatmap');
       const cellSize = 4140;
       const width = 24;
       const height = 16;
@@ -97,7 +96,6 @@ class VivViewerWrapper extends PureComponent {
         fillColor: [Math.floor(Math.random() * 256), 0, 0, 100],
         position: [(i % width) * cellSize, Math.floor(i / width) * cellSize]
       }));
-      console.log('data1', data1);
       return new GridCellLayer({
         id: 'grid-cell-layer-#detail#',
         data: data1,
@@ -111,7 +109,6 @@ class VivViewerWrapper extends PureComponent {
     
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
-        console.log(loader,'loader')
         const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i%row+1), 80000*Math.floor(i/row), 0]);
         this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
       })
@@ -165,7 +162,6 @@ class VivViewerWrapper extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate')
     const { props } = this;
     const { views } = props;
     // Only update state if the previous viewState prop does not match the current one
@@ -209,7 +205,6 @@ class VivViewerWrapper extends PureComponent {
    * using the previous state (falling back on the view's initial state) for target x and y, zoom level etc.
    */
   static getDerivedStateFromProps(props, prevState) {
-    console.log('getDerivedStateFromProps')
     const { views, viewStates: viewStatesProps } = props;
     // Update internal viewState on view changes as well as height and width changes.
     // Maybe we should add x/y too?
@@ -308,11 +303,9 @@ class VivViewerWrapper extends PureComponent {
    * This renders the layers in the DeckGL context.
    */
   _renderLayers(loader) {
-    console.log('_renderLayers')
     const { onHover } = this;
     const { viewStates } = this.state;
     const { views, layerProps } = this.props;
-    console.log('layerProps',layerProps)
     return views.map((view, i) =>
       view.getLayers({
         viewStates,
@@ -326,7 +319,6 @@ class VivViewerWrapper extends PureComponent {
   }
 
   render() {
-    console.log('render()')
     /* eslint-disable react/destructuring-assignment */
     const { views, randomize, useDevicePixels = true, deckProps } = this.props;
     const { viewStates } = this.state;
@@ -348,7 +340,6 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
-    console.log(this.state.layers,'this.state.layers')
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading

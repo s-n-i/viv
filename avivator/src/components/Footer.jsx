@@ -35,7 +35,6 @@ export default function Footer() {
 
   const resolution = use3d ? volumeResolution : pyramidResolution;
   const level = loader[resolution];
-console.log('level',level)
   if (!level) return null;
   return (
     <Box
