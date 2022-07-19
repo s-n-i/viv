@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'; // eslint-disable-line import/no-unresolved
 import DeckGL from '@deck.gl/react';
+import {LinearInterpolator} from '@deck.gl/core'
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
@@ -57,10 +58,23 @@ const areViewStatesEqual = (viewState, otherViewState) => {
  */
 class VivViewerWrapper extends PureComponent {
   constructor(props) {
+    const onTransitionEnd=(direction)=>{
+      this.setState({ivstt:{target: [52225.77594287684, 33095],
+        zoom: direction ? -7 : -1,
+        id:'axc',
+        transitionDuration: 5000,
+        transitionInterpolator: new LinearInterpolator({transitionProps: ['target', 'zoom']}),
+        onTransitionEnd:()=>{onTransitionEnd(!direction)}
+      }});
+    }
     super(props);
     this.state = {
-      viewStates: {}
+      viewStates: {},
+      ivstt: {target: [52225.77594287684, 33095],
+        zoom: -7
+        }
     };
+    setTimeout(onTransitionEnd,1000)
     const { viewStates } = this.state;
     const { views, viewStates: initialViewStates } = this.props;
     views.forEach(view => {
@@ -297,16 +311,15 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
-    console.log(deckProps?.layers,'deckProps?.layers')
+    console.log(this.state.ivstt,'this.state.ivstt')
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
-        {...(deckProps ?? {})}
         layerFilter={this.layerFilter}
         layers={deckProps?.layers === undefined ? [...this._renderLayers()] : [...this._renderLayers(), ...deckProps.layers]}
-        onViewStateChange={this._onViewStateChange}
+        initialViewState={this.state.ivstt}
         views={deckGLViews}
-        viewState={viewStates}
+        controller={true}
         useDevicePixels={useDevicePixels}
         getCursor={({ isDragging }) => {
           return isDragging ? 'grabbing' : 'crosshair';

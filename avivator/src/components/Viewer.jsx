@@ -146,6 +146,11 @@ const Viewer = () => {
 
   };
 
+  const viewstt={target: [52225.77594287684, 33095],
+  zoom: -9.080060648139831,
+  id:'axc'
+  };
+
   return use3d ? (
     <VolumeViewer
       loader={loader}
@@ -197,6 +202,7 @@ const Viewer = () => {
     />
   ) : (
     <PictureInPictureViewer
+    viewStates={[viewstt]}
       loader={loader}
       contrastLimits={contrastLimits}
       colors={colors}
