@@ -85,54 +85,6 @@ class VivViewerWrapper extends PureComponent {
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
-      'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate'
     ];
     const row =20;
@@ -155,7 +107,7 @@ class VivViewerWrapper extends PureComponent {
         getFillColor: (d) => d.fillColor
       });
     };
-    this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"}), generateHeatmap()];
+    this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"})];
     
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
