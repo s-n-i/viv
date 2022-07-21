@@ -1,4 +1,4 @@
-import { OrthographicView } from '@deck.gl/core';
+import { OrbitView } from '@deck.gl/core';
 
 /**
  * This class generates a layer and a view for use in the VivViewer
@@ -24,7 +24,7 @@ export default class VivView {
    * @returns {View} The DeckGL View for this class.
    */
   getDeckGlView() {
-    return new OrthographicView({
+    return new OrbitView({
       controller: true,
       id: this.id,
       height: this.height,

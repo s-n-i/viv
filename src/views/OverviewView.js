@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { Controller, OrthographicView } from '@deck.gl/core';
+import { Controller, OrbitView } from '@deck.gl/core';
 import VivView from './VivView';
 import { OverviewLayer } from '../layers';
 import { makeBoundingBox, getVivId } from './utils';
@@ -162,7 +162,7 @@ export default class OverviewView extends VivView {
   getDeckGlView() {
     const { scale, clickCenter } = this;
     const controller = clickCenter && { type: OverviewController, scale };
-    return new OrthographicView({
+    return new OrbitView({
       controller,
       id: this.id,
       height: this.height,

@@ -80,6 +80,9 @@ class VivViewerWrapper extends PureComponent {
    
 
     const data=[
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
+      'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate',
@@ -87,7 +90,7 @@ class VivViewerWrapper extends PureComponent {
       'https://files.ci.aws.labshare.org/pyramids/rat_brain',
       'https://files.ci.aws.labshare.org/pyramids/kirill_plate'
     ];
-    const row =20;
+    const row =3;
     const generateHeatmap = () => {
       const cellSize = 4140;
       const width = 24;
@@ -109,7 +112,7 @@ class VivViewerWrapper extends PureComponent {
     
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
-        const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i%row+1), 80000*Math.floor(i/row), 0]);
+        const modelMatrix = new Matrix4(IDENTITY).translate([110000*(i%row+1), 110000*Math.floor(i/row), 0]);
         this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
       })
     })

@@ -1,4 +1,4 @@
-import { OrthographicView } from '@deck.gl/core';
+import { OrbitView } from '@deck.gl/core';
 import { Matrix4 } from 'math.gl';
 import { getImageSize } from '../loaders/utils';
 
@@ -16,7 +16,7 @@ export function getVivId(id) {
  * @returns {View} The DeckGL View for this viewport.
  */
 export function makeBoundingBox(viewState) {
-  const viewport = new OrthographicView().makeViewport({
+  const viewport = new OrbitView().makeViewport({
     // From the current `detail` viewState, we need its projection matrix (actually the inverse).
     viewState,
     height: viewState.height,
