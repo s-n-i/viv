@@ -157,7 +157,7 @@ const Controller = () => {
           pixelValue={pixelValues[i]}
           toggleIsOn={toggleIsOn}
           handleSliderChange={handleSliderChange}
-          domain={domains[i]}
+          domain={[0,3000]}
           slider={contrastLimits[i]}
           color={colors[i]}
           handleRemoveChannel={handleRemoveChannel}
