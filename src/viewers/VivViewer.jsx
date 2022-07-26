@@ -3,6 +3,7 @@ import DeckGL from '@deck.gl/react';
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
+import { generatePolygons } from './generatePolygons';
 
 const areViewStatesEqual = (viewState, otherViewState) => {
   return (
@@ -304,8 +305,8 @@ class VivViewerWrapper extends PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...this._renderLayers()]
-            : [...this._renderLayers(), ...deckProps.layers]
+            ? [...this._renderLayers(), generatePolygons(true)]
+            : [...this._renderLayers(), ...deckProps.layers, generatePolygons(true)]
         }
         onViewStateChange={this._onViewStateChange}
         views={deckGLViews}
