@@ -3,6 +3,7 @@ import DeckGL from '@deck.gl/react';
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
 import { getVivId } from '../views/utils';
+import {MVTLayer} from '@deck.gl/geo-layers';
 
 const areViewStatesEqual = (viewState, otherViewState) => {
   return (
@@ -297,6 +298,27 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
+    const mvt = new MVTLayer({
+      data: `https://files.scb-ncats.io/pyramids/p01_x03_y02_wx2_wy0_c1.mbtiles`,
+  
+      minZoom: 0,
+      maxZoom: 23,
+      getLineColor: [192, 192, 192],
+      getFillColor: [140, 170, 180],
+  
+      getLineWidth: f => {
+        switch (f.properties.class) {
+          case 'street':
+            return 6;
+          case 'motorway':
+            return 10;
+          default:
+            return 1;
+        }
+      },
+      lineWidthMinPixels: 1
+    });
+    console.log('mvt')
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -304,8 +326,8 @@ class VivViewerWrapper extends PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...this._renderLayers()]
-            : [...this._renderLayers(), ...deckProps.layers]
+            ? [...this._renderLayers(), mvt]
+            : [...this._renderLayers(), ...deckProps.layers, mvt]
         }
         onViewStateChange={this._onViewStateChange}
         views={deckGLViews}
