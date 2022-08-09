@@ -73,10 +73,6 @@ class VivViewerWrapper extends PureComponent {
     this._onViewStateChange = this._onViewStateChange.bind(this);
     this.layerFilter = this.layerFilter.bind(this);
     this.onHover = this.onHover.bind(this);
-    const IDENTITY = [1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1];
    
 
     const data=[
@@ -165,7 +161,6 @@ class VivViewerWrapper extends PureComponent {
       "https://files.scb-ncats.io/pyramids/eastman/p82_x(01-24)_y(01-16)_wx(0-2)_wy(0-2)_c(1-2)",
       "https://files.scb-ncats.io/pyramids/eastman/p83_x(01-24)_y(01-16)_wx(0-2)_wy(0-2)_c(1-2)"
     ];
-    const row =20;
     const generateHeatmap = () => {
       const cellSize = 4140;
       const width = 24;
@@ -184,11 +179,13 @@ class VivViewerWrapper extends PureComponent {
       });
     };
     //this.state.layers=[this._renderLayers()[0][0].clone({id:"ZarrPixelSource-"+"original"+"-#detail#"})];
-    this.state.layers=[];
+    this.state.loaders=[];
+    //this.state.layers=[];
     data.forEach((url, i)=>{
       createLoader(url).then(loader=>{
-        const modelMatrix = new Matrix4(IDENTITY).translate([140000*(i%row), 140000*Math.floor(i/row), 0]);
-        this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
+        //const modelMatrix = new Matrix4(IDENTITY).translate([140000*(i%row), 140000*Math.floor(i/row), 0]);
+        //this.setState({layers:[...this.state.layers,this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix})]})
+        this.setState({loaders:[...this.state.loaders,loader]});
       })
     })
   }
@@ -418,6 +415,17 @@ class VivViewerWrapper extends PureComponent {
       deckGLViews[0] = deckGLViews[randomizedIndex];
       deckGLViews[randomizedIndex] = holdFirstElement;
     }
+
+    const IDENTITY = [1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1];
+      const row =20;
+    const layers=this.state.loaders.map((loader, i)=>{
+      console.log('i',i)
+      const modelMatrix = new Matrix4(IDENTITY).translate([140000*(i%row), 140000*Math.floor(i/row), 0]);
+      return this._renderLayers(loader.data)[0][0].clone({id:"ZarrPixelSource-"+i+"-#detail#", modelMatrix});
+    })
     return (
       <DeckGL
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -425,8 +433,8 @@ class VivViewerWrapper extends PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...this.state.layers]
-            : [...this.state.layers, ...deckProps.layers]
+            ? [...layers]
+            : [...layers, ...deckProps.layers]
         }
         onViewStateChange={this._onViewStateChange}
         views={deckGLViews}
