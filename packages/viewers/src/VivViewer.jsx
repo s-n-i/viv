@@ -76,28 +76,25 @@ class VivViewerWrapper extends React.PureComponent {
 
     const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
     const row = 20;
-    const data = Array(200).fill(
+    const data = Array(150).fill(
       'https://viv-files.ci.aws.labshare.org/LuCa-7color_Scan_c(0-5)/'
     );
     this.state.layers = [];
-    data.forEach((url, i) => {
-      createLoader(url).then(loader => {
-        const modelMatrix = new Matrix4(IDENTITY).translate([
-          140000 * (i % row),
-          140000 * Math.floor(i / row),
-          0
-        ]);
-        this.setState({
-          layers: [
-            ...this.state.layers,
-            this._renderLayers(loader.data)[0][0].clone({
-              id: 'ZarrPixelSource-' + i + '-#detail#',
-              modelMatrix
-            })
-          ]
-        });
-      });
-    });
+    Promise.all(data.map(url => createLoader(url))).then(values =>
+      this.setState({
+        layers: values.map((loader, i) => {
+          const modelMatrix = new Matrix4(IDENTITY).translate([
+            100000 * (i % row),
+            100000 * Math.floor(i / row),
+            0
+          ]);
+          return this._renderLayers(loader.data)[0][0].clone({
+            id: 'ZarrPixelSource-' + i + '-#detail#',
+            modelMatrix
+          });
+        })
+      })
+    );
   }
 
   /**
@@ -287,7 +284,7 @@ class VivViewerWrapper extends React.PureComponent {
   /**
    * This renders the layers in the DeckGL context.
    */
-  _renderLayers() {
+  _renderLayers(loader) {
     const { onHover } = this;
     const { viewStates } = this.state;
     const { views, layerProps } = this.props;
@@ -296,6 +293,7 @@ class VivViewerWrapper extends React.PureComponent {
         viewStates,
         props: {
           ...layerProps[i],
+          ...(loader ? { loader } : {}),
           onHover
         }
       })
