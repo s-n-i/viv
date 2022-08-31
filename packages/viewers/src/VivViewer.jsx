@@ -76,8 +76,11 @@ class VivViewerWrapper extends React.PureComponent {
 
     const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
     const row = 20;
-    const data = Array(150).fill(
-      'https://viv-files.ci.aws.labshare.org/LuCa-7color_Scan_c(0-5)/'
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+    const data = Array(100).fill(
+      params.image_url
     );
     this.state.layers = [];
     Promise.all(data.map(url => createLoader(url))).then(values =>
