@@ -3,6 +3,8 @@ import DeckGL from '@deck.gl/react';
 import { getVivId } from '@vivjs/views';
 // No need to use the ES6 or React variants.
 import equal from 'fast-deep-equal';
+import { createLoader } from '../../../sites/avivator/src/utils';
+import { Matrix4 } from '@math.gl/core';
 
 const areViewStatesEqual = (viewState, otherViewState) => {
   return (
@@ -71,6 +73,31 @@ class VivViewerWrapper extends React.PureComponent {
     this._onViewStateChange = this._onViewStateChange.bind(this);
     this.layerFilter = this.layerFilter.bind(this);
     this.onHover = this.onHover.bind(this);
+
+    const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+    const row = 20;
+    const data = Array(200).fill(
+      'https://viv-files.ci.aws.labshare.org/LuCa-7color_Scan_c(0-5)/'
+    );
+    this.state.layers = [];
+    data.forEach((url, i) => {
+      createLoader(url).then(loader => {
+        const modelMatrix = new Matrix4(IDENTITY).translate([
+          140000 * (i % row),
+          140000 * Math.floor(i / row),
+          0
+        ]);
+        this.setState({
+          layers: [
+            ...this.state.layers,
+            this._renderLayers(loader.data)[0][0].clone({
+              id: 'ZarrPixelSource-' + i + '-#detail#',
+              modelMatrix
+            })
+          ]
+        });
+      });
+    });
   }
 
   /**
@@ -304,7 +331,7 @@ class VivViewerWrapper extends React.PureComponent {
         layerFilter={this.layerFilter}
         layers={
           deckProps?.layers === undefined
-            ? [...this._renderLayers()]
+            ? [...this.state.layers]
             : [...this._renderLayers(), ...deckProps.layers]
         }
         onViewStateChange={this._onViewStateChange}
