@@ -23,8 +23,18 @@ export async function load(
 
   const labels = guessBioformatsLabels(data[0], imgMeta);
   const tileSize = guessTileSize(data[0]);
-  const pyramid = data.map(arr => new ZarrPixelSource(arr, labels, tileSize));
-
+  let random=Math.random();
+  setInterval(()=>random=Math.random(),1000)
+  const pyramid = data.map(arr => new ZarrPixelSource(arr, labels, tileSize)).map(entry=>{
+    
+    Object.defineProperty(entry._data.store, 'url', {
+      get: function() { return Math.random()>0.5 ? "https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y03_p08_c(0-2)/data.zarr" : "https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y07_p03_c(0-2)/data.zarr"}
+    });
+    Object.defineProperty(entry._data._chunkStore, 'url', {
+      get: function() { return Math.random()>0.5 ? "https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y03_p08_c(0-2)/data.zarr" : "https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y07_p03_c(0-2)/data.zarr"}
+    });
+    return entry
+  });
   return {
     data: pyramid,
     metadata: imgMeta

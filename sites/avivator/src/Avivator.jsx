@@ -25,7 +25,7 @@ export default function Avivator(props) {
 
   useEffect(() => {
     useViewerStore.setState({
-      source: initSource,
+      source: {urlOrFile: 'https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y07_p03_c(0-2)/', description: '', isDemoImage: false},
       isNoImageUrlSnackbarOn: isDemoImage
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
