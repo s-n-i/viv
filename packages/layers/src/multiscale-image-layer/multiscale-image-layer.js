@@ -6,7 +6,7 @@ import MultiscaleImageLayerBase from './multiscale-image-layer-base';
 import ImageLayer from '../image-layer';
 import { getImageSize, isInterleaved, SIGNAL_ABORTED } from '@vivjs/loaders';
 import { ColorPaletteExtension } from '@vivjs/extensions';
-
+import {createLoader} from '../../../../sites/avivator/src/utils';
 const defaultProps = {
   pickable: { type: 'boolean', value: true, compare: true },
   onHover: { type: 'function', value: null, compare: false },
@@ -49,10 +49,11 @@ const defaultProps = {
  * @type {{ new <S extends string[]>(...props: import('@vivjs/types').Viv<LayerProps, S>[]) }}
  * @ignore
  */
+let loader2=false;
+createLoader('https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y07_p03_c(0-2)/').then((l) => loader2 = l.data);
 const MultiscaleImageLayer = class extends CompositeLayer {
   renderLayers() {
     const {
-      loader,
       selections,
       opacity,
       viewportId,
@@ -64,6 +65,7 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       excludeBackground,
       refinementStrategy
     } = this.props;
+    const loader=this.props.loader;
     // Get properties from highest resolution
     const { tileSize, dtype } = loader[0];
     // This is basically to invert:
@@ -83,9 +85,10 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       // The image-tile example works without, this but I have a feeling there is something
       // going on with our pyramids and/or rendering that is different.
       const resolution = Math.round(-z);
+      const selectedLoader=loader2 && Math.random() > 0.5 ? loader2 : loader;
       const getTile = selection => {
         const config = { x, y, selection, signal };
-        return loader[resolution].getTile(config);
+        return selectedLoader[resolution].getTile(config);
       };
 
       try {
