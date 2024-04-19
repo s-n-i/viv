@@ -1,6 +1,7 @@
 import { CompositeLayer } from '@deck.gl/core';
 import { Matrix4 } from '@math.gl/core';
 import GL from '@luma.gl/constants';
+import {createLoader} from '../../../../sites/avivator/src/utils';
 
 import MultiscaleImageLayerBase from './multiscale-image-layer-base';
 import ImageLayer from '../image-layer';
@@ -49,6 +50,12 @@ const defaultProps = {
  * @type {{ new <S extends string[]>(...props: import('@vivjs/types').Viv<LayerProps, S>[]) }}
  * @ignore
  */
+
+
+let loader2=false;
+createLoader('https://files.scb-ncats.io/pyramids/Idr0043/precompute/79289/tissue164989_x00_y07_p03_c(0-2)/').then((l) => loader2 = l.data);
+ 
+
 const MultiscaleImageLayer = class extends CompositeLayer {
   renderLayers() {
     const {
@@ -84,8 +91,9 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       // going on with our pyramids and/or rendering that is different.
       const resolution = Math.round(-z);
       const getTile = selection => {
-        const config = { x, y, selection, signal };
-        return loader[resolution].getTile(config);
+        const config = { x:0, y:0, selection, signal };
+        const selectedLoader = (x>0 || y>0) && loader2 ? loader2 : loader;
+        return selectedLoader[resolution].getTile(config);
       };
 
       try {
@@ -115,7 +123,7 @@ const MultiscaleImageLayer = class extends CompositeLayer {
           // can just return early, no need  to check for webgl2
           return tile;
         }
-
+        console.log(tile,'tile')
         return tile;
       } catch (err) {
         /*
@@ -144,7 +152,7 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       zoomOffset: Math.round(
         Math.log2(modelMatrix ? modelMatrix.getScale()[0] : 1)
       ),
-      extent: [0, 0, width, height],
+      extent: [0, 0, 4*width, 4*height],
       // See the above note within for why the use of zoomOffset and the rounding necessary.
       minZoom: Math.round(-(loader.length - 1)),
       maxZoom: 0,
