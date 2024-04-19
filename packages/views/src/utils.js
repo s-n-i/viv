@@ -2,7 +2,7 @@ import { Matrix4 } from '@math.gl/core';
 import { getImageSize } from '@vivjs/loaders';
 
 import {
-  MultiscaleImageLayer,
+  GridLayer,
   ImageLayer,
   getPhysicalSizeScalingMatrix
 } from '@vivjs/layers';
@@ -67,13 +67,15 @@ export function getImageLayer(id, props) {
   const sourceName = loader[0]?.constructor?.name;
 
   // Create at least one layer even without selections so that the tests pass.
-  const Layer = loader.length > 1 ? MultiscaleImageLayer : ImageLayer;
+  const Layer = loader.length > 1 ? GridLayer : ImageLayer;
   const layerLoader = loader.length > 1 ? loader : loader[0];
 
   return new Layer({
     ...props,
     id: `${sourceName}${getVivId(id)}`,
     viewportId: id,
-    loader: layerLoader
+    loaders: [{row:0, col: 0, name: 'asdasd', loader: layerLoader}],
+    rows: 1,
+    columns: 1
   });
 }

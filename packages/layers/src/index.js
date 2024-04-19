@@ -1,4 +1,5 @@
 export { default as MultiscaleImageLayer } from './multiscale-image-layer/multiscale-image-layer';
+export { default as GridLayer } from './multiscale-image-layer/gridLayer';
 export { default as ImageLayer } from './image-layer';
 export { default as OverviewLayer } from './overview-layer';
 export { default as ScaleBarLayer } from './scale-bar-layer';

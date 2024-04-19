@@ -32,12 +32,14 @@
     "@luma.gl/webgl": "~8.5.21"
   },
   "dependencies": {
+    "@danmarshall/deckgl-typings": "^4.9.28",
     "@math.gl/core": "^3.5.7",
     "@math.gl/culling": "^3.5.7",
     "@vivjs/constants": "workspace:*",
     "@vivjs/extensions": "workspace:*",
     "@vivjs/loaders": "workspace:*",
-    "@vivjs/types": "workspace:*"
+    "@vivjs/types": "workspace:*",
+    "p-map": "^7.0.2"
   },
   "unbuild": {
     "entries": [
