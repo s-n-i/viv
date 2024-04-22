@@ -25,7 +25,7 @@ export default function Avivator(props) {
 
   useEffect(() => {
     useViewerStore.setState({
-      source: initSource,
+      source: {urlOrFile: 'https://uk1s3.embassy.ebi.ac.uk/idr/zarr/v0.4/idr0062A/6001240.zarr', description: '', isDemoImage: false},
       isNoImageUrlSnackbarOn: isDemoImage
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

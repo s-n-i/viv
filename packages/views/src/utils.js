@@ -70,11 +70,12 @@ export function getImageLayer(id, props) {
   const Layer = loader.length > 1 ? GridLayer : ImageLayer;
   const layerLoader = loader.length > 1 ? loader : loader[0];
 
+  console.log('layerLoader', layerLoader)
   return new Layer({
     ...props,
     id: `${sourceName}${getVivId(id)}`,
     viewportId: id,
-    loaders: [{row:0, col: 0, name: 'asdasd', loader: layerLoader}],
+    loaders: [{row:0, col: 0, name: 'asdasd', loader: layerLoader[0]}],
     rows: 1,
     columns: 1
   });
