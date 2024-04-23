@@ -20,15 +20,17 @@ export function renderSubLayers(props) {
   }
   const base = loader[0];
   const { height, width } = getImageSize(base);
+  //console.log(z,'z')
   // Tiles are exactly fitted to have height and width such that their bounds match that of the actual image (not some padded version).
   // Thus the right/bottom given by deck.gl are incorrect since they assume tiles are of uniform sizes, which is not the case for us.
   const bounds = [
-    left,
-    data.height < base.tileSize ? height : bottom,
-    data.width < base.tileSize ? width : right,
-    top
+    left/Math.abs(z),
+    bottom/Math.abs(z),
+    right/Math.abs(z),
+    top/Math.abs(z)
   ];
   if (isInterleaved(base.shape)) {
+    console.log('bitmap')
     const { photometricInterpretation = 2 } = base.meta;
     return new BitmapLayer(props, {
       image: data,
@@ -40,6 +42,7 @@ export function renderSubLayers(props) {
       extensions: []
     });
   }
+  console.log('xr')
   return new XRLayer(props, {
     channelData: data,
     // Uncomment to help debugging - shades the tile being hovered over.
