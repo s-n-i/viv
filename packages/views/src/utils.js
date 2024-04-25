@@ -52,6 +52,8 @@ export function getDefaultInitialViewState(
     ),
     zoom
   };
+  loaderInitialViewState.target=[-3000,-1500]
+  console.log(loaderInitialViewState,'loaderInitialViewState')
   return loaderInitialViewState;
 }
 
