@@ -24,8 +24,8 @@ export function renderSubLayers(props) {
   // Thus the right/bottom given by deck.gl are incorrect since they assume tiles are of uniform sizes, which is not the case for us.
   const bounds = [
     left,
-    data.height < base.tileSize ? height : bottom,
-    data.width < base.tileSize ? width : right,
+    bottom,
+    right,
     top
   ];
   if (isInterleaved(base.shape)) {

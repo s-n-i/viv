@@ -93,7 +93,7 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       const getTile = selection => {
         const config = { x:0, y:0, selection, signal };
         const selectedLoader = (x>0 || y>0) && loader2 ? loader2 : loader;
-        return selectedLoader[resolution].getTile(config);
+        return selectedLoader[resolution+4].getTile(config);
       };
 
       try {
@@ -112,6 +112,8 @@ const MultiscaleImageLayer = class extends CompositeLayer {
           width: tiles[0].width,
           height: tiles[0].height
         };
+
+        console.log(tile,'tile')
 
         if (isInterleaved(loader[resolution].shape)) {
           // eslint-disable-next-line prefer-destructuring
@@ -149,10 +151,8 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       // how the zoom level you fetch tiles at is offset, allowing us to fetch higher resolution tiles
       // while at a lower "absolute" zoom level.  If you didn't use this prop, an image that is scaled
       // up would always look "low resolution" no matter the level of the image pyramid you are looking at.
-      zoomOffset: Math.round(
-        Math.log2(modelMatrix ? modelMatrix.getScale()[0] : 1)
-      ),
-      extent: [0, 0, 4*width, 4*height],
+      zoomOffset: 3,
+      extent: [0, 0, 40*width, 40*height],
       // See the above note within for why the use of zoomOffset and the rounding necessary.
       minZoom: Math.round(-(loader.length - 1)),
       maxZoom: 0,
