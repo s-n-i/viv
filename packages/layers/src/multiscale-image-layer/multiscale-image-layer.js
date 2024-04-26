@@ -99,7 +99,7 @@ const MultiscaleImageLayer = class extends CompositeLayer {
       const getTile = selection => {
         const config = { x:0, y:0, selection, signal };
         console.log(loaders,'loaders')
-        const selectedLoader = (x>0 || y>0) && loaders[y*30+x] ? loaders[y*30+x] : loader;
+        const selectedLoader = loaders[y*30+x] ? loaders[y*30+x] : loader;
         return selectedLoader[resolution+5].getTile(config);
       };
 
